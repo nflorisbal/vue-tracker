@@ -22,6 +22,7 @@ import TimerControl from './TimerControl.vue';
 
 export default defineComponent({
   name: 'TaskForm',
+  emits: ['onSaveTask'],
   components: {
     TimerControl,
   },
@@ -32,6 +33,10 @@ export default defineComponent({
   },
   methods: {
     endTask(elapsedTime: number): void {
+      this.$emit('onSaveTask', {
+        description: this.taskDescription,
+        timeInSeconds: elapsedTime,
+      });
       this.taskDescription = '';
     },
   },
