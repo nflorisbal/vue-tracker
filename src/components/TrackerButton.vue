@@ -1,5 +1,5 @@
 <template>
-  <button class="button" @click="clicked" :disabled="disableStatus">
+  <button type="button" class="button" @click="clicked" :disabled="disableStatus">
     <span class="icon"><span :class="iconClass"></span></span>
     <span>{{ buttonText }}</span>
   </button>

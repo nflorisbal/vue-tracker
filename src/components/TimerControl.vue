@@ -1,18 +1,20 @@
 <template>
   <div class="is-flex is-align-items-center is-justify-content-space-between">
     <DisplayStopwatch :timeInSeconds="timeInSeconds" />
-    <TrackerButton
-      buttonText="play"
-      iconClass="fas fa-play"
-      :disableStatus="timerRunning"
-      @click="startTask"
-    />
-    <TrackerButton
-      buttonText="stop"
-      iconClass="fas fa-stop"
-      :disableStatus="!timerRunning"
-      @click="stopTask"
-    />
+    <div class="buttons">
+      <TrackerButton
+        buttonText="play"
+        iconClass="fas fa-play"
+        :disableStatus="timerRunning"
+        @click="startTask"
+      />
+      <TrackerButton
+        buttonText="stop"
+        iconClass="fas fa-stop"
+        :disableStatus="!timerRunning"
+        @click="stopTask"
+      />
+    </div>
   </div>
 </template>
 
@@ -52,3 +54,9 @@ export default defineComponent({
   },
 });
 </script>
+
+<style>
+.buttons > TrackerButton {
+  margin-left: 0.5rem;
+}
+</style>

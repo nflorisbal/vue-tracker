@@ -1,6 +1,6 @@
 <template>
   <section>
-    <strong class="display">{{ elapsedTime }}</strong>
+    <span class="fas fa-clock"></span> <strong class="display">{{ elapsedTime }}</strong>
   </section>
 </template>
 <script lang="ts">
