@@ -31,9 +31,8 @@
 </template>
 
 <script lang="ts">
-import { key } from '@/store';
-import { defineComponent, computed } from 'vue';
-import { useStore } from 'vuex';
+import { useStoreProject } from '@/store';
+import { computed, defineComponent } from 'vue';
 import TimerControl from './TimerControl.vue';
 
 export default defineComponent({
@@ -59,7 +58,7 @@ export default defineComponent({
     },
   },
   setup() {
-    const store = useStore(key);
+    const store = useStoreProject();
     return {
       projects: computed(() => store.state.projects),
     };
