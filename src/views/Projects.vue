@@ -1,32 +1,31 @@
 <template>
   <section class="projects">
     <h1>Projetcs</h1>
-    <form @submit.prevent="save">
-      <div class="field">
-        <label class="label" for="projectName">Project name</label>
-        <input
-          class="input"
-          type="text"
-          placeholder="Project name"
-          id="projectName"
-          v-model="projectName"
-        />
-      </div>
-      <div class="field" type="submit">
-        <button class="button">Save</button>
-      </div>
-    </form>
+    <router-link to="/projects/new" class="button">
+      <span class="icon is-small">
+        <span class="fas fa-plus"></span>
+      </span>
+      <span>New project</span>
+    </router-link>
     <table class="table is-fullwidth">
       <thead>
         <tr>
           <th>id</th>
           <th>name</th>
+          <th>actions</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="project in projects" :key="project.id">
           <td>{{ project.id }}</td>
           <td>{{ project.name }}</td>
+          <td>
+            <router-link :to="`/projects/${project.id}`" class="button">
+              <span class="icon is-small">
+                <span class="fas fa-pencil-alt"></span>
+              </span>
+            </router-link>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -39,20 +38,9 @@ import { defineComponent, computed } from 'vue';
 
 export default defineComponent({
   name: 'ProjectsView',
-  data() {
-    return {
-      projectName: '',
-    };
-  },
-  methods: {
-    save(): void {
-      this.store.commit('ADD_PROJECT', this.projectName);
-    },
-  },
   setup() {
     const store = useStoreProject();
     return {
-      store,
       projects: computed(() => store.state.projects),
     };
   },
