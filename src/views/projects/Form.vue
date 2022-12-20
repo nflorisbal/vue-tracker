@@ -25,6 +25,20 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'FormView',
+  props: {
+    id: {
+      type: String,
+    },
+  },
+  mounted() {
+    if (this.id) {
+      const project = this.store.state.projects.find(
+        (project) => project.id === this.id
+      );
+
+      this.projectName = project?.name || '';
+    }
+  },
   data() {
     return {
       projectName: '',
@@ -32,9 +46,17 @@ export default defineComponent({
   },
   methods: {
     save(): void {
-      this.store.commit('ADD_PROJECT', this.projectName);
-      this.projectName = '';
-      this.$router.push('/projects');
+      if (this.id) {
+        this.store.commit('UPDATE_PROJECT', {
+          id: this.id,
+          name: this.projectName,
+        });
+        this.$router.push('/projects');
+      } else {
+        this.store.commit('ADD_PROJECT', this.projectName);
+        this.projectName = '';
+        this.$router.push('/projects');
+      }
     },
   },
   setup() {
