@@ -24,6 +24,11 @@
                 <span class="fas fa-pencil-alt"></span>
               </span>
             </router-link>
+            <button class="button ml-2 is-danger" @click="exclude(project.id)">
+              <span class="icon is-small">
+                <span class="fas fa-trash"></span>
+              </span>
+            </button>
           </td>
         </tr>
       </tbody>
@@ -33,14 +38,21 @@
 
 <script lang="ts">
 import { useStoreProject } from '@/store';
+import { EXCLUDE_PROJECT } from '@/store/mutations-type';
 import { defineComponent, computed } from 'vue';
 
 export default defineComponent({
   name: 'ListProjectsView',
+  methods: {
+    exclude(id: string) {
+      this.store.commit(EXCLUDE_PROJECT, id);
+    },
+  },
   setup() {
     const store = useStoreProject();
     return {
       projects: computed(() => store.state.projects),
+      store,
     };
   },
 });

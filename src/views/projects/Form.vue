@@ -20,6 +20,7 @@
 
 <script lang="ts">
 import { useStoreProject } from '@/store';
+import { ADD_PROJECT, UPDATE_PROJECT } from '@/store/mutations-type';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -46,13 +47,13 @@ export default defineComponent({
   methods: {
     save(): void {
       if (this.id) {
-        this.store.commit('UPDATE_PROJECT', {
+        this.store.commit(UPDATE_PROJECT, {
           id: this.id,
           name: this.projectName,
         });
         this.$router.push('/projects');
       } else {
-        this.store.commit('ADD_PROJECT', this.projectName);
+        this.store.commit(ADD_PROJECT, this.projectName);
         this.projectName = '';
         this.$router.push('/projects');
       }
