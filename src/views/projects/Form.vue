@@ -1,6 +1,5 @@
 <template>
-  <section class="projects">
-    <h1>Projetcs</h1>
+  <section>
     <form @submit.prevent="save">
       <div class="field">
         <label class="label" for="projectName">Project name</label>
@@ -24,7 +23,7 @@ import { useStoreProject } from '@/store';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'FormView',
+  name: 'FormProjectsView',
   props: {
     id: {
       type: String,
@@ -67,9 +66,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped>
-.projects {
-  padding: 1.25rem;
-}
-</style>
