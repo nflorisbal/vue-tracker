@@ -31,7 +31,9 @@
 </template>
 
 <script lang="ts">
+import { NotificationType } from '@/interfaces/INotifications';
 import { useStoreProject } from '@/store';
+import { NOTIFY } from '@/store/mutations-type';
 import { computed, defineComponent } from 'vue';
 import TimerControl from './TimerControl.vue';
 
@@ -49,10 +51,23 @@ export default defineComponent({
   },
   methods: {
     endTask(elapsedTime: number): void {
+      const project = this.projects.find(
+        (project) => project.id === this.idProject
+      );
+
+      if (!project) {
+        this.store.commit(NOTIFY, {
+          type: NotificationType.ERROR,
+          title: 'Error',
+          message: 'You must select a project',
+        });
+        return;
+      }
+
       this.$emit('onSaveTask', {
         description: this.taskDescription,
         timeInSeconds: elapsedTime,
-        project: this.projects.find((project) => project.id === this.idProject),
+        project: project,
       });
       this.taskDescription = '';
     },
@@ -61,6 +76,7 @@ export default defineComponent({
     const store = useStoreProject();
     return {
       projects: computed(() => store.state.projects),
+      store,
     };
   },
 });
