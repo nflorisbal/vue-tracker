@@ -21,8 +21,9 @@
 <script lang="ts">
 import { NotificationType } from '@/interfaces/INotifications';
 import { useStoreProject } from '@/store';
-import { ADD_PROJECT, NOTIFY, UPDATE_PROJECT } from '@/store/mutations-type';
+import { ADD_PROJECT, UPDATE_PROJECT } from '@/store/mutations-type';
 import { defineComponent } from 'vue';
+import useNotifier from '@/hooks/notifier';
 
 export default defineComponent({
   name: 'FormProjectsView',
@@ -56,19 +57,21 @@ export default defineComponent({
       } else {
         this.store.commit(ADD_PROJECT, this.projectName);
         this.projectName = '';
-        this.store.commit(NOTIFY, {
-          type: NotificationType.SUCCESS,
-          title: 'Success',
-          message: 'Project created successfully',
-        });
+        this.notify(
+          NotificationType.SUCCESS,
+          'Project created',
+          'The project was created successfully'
+        );
         this.$router.push('/projects');
       }
     },
   },
   setup() {
     const store = useStoreProject();
+    const { notify } = useNotifier();
     return {
       store,
+      notify,
     };
   },
 });
