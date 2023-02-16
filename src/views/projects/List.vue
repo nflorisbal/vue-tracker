@@ -38,6 +38,7 @@
 
 <script lang="ts">
 import { useStoreProject } from '@/store';
+import { GET_PROJECTS } from '@/store/actions-type';
 import { EXCLUDE_PROJECT } from '@/store/mutations-type';
 import { defineComponent, computed } from 'vue';
 
@@ -50,6 +51,7 @@ export default defineComponent({
   },
   setup() {
     const store = useStoreProject();
+    store.dispatch(GET_PROJECTS);
     return {
       projects: computed(() => store.state.projects),
       store,

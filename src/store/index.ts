@@ -2,12 +2,15 @@ import { INotifications } from '@/interfaces/INotifications';
 import IProject from '@/interfaces/IProject';
 import { InjectionKey } from 'vue';
 import { createStore, Store, useStore } from 'vuex';
+import { GET_PROJECTS } from './actions-type';
 import {
   ADD_PROJECT,
   EXCLUDE_PROJECT,
   NOTIFY,
+  SET_PROJECTS,
   UPDATE_PROJECT,
 } from './mutations-type';
+import http from '@/http';
 
 interface State {
   projects: IProject[];
@@ -36,6 +39,9 @@ export const store = createStore<State>({
     [EXCLUDE_PROJECT](state, projectId: string) {
       state.projects = state.projects.filter((p) => p.id !== projectId);
     },
+    [SET_PROJECTS](state, projects: IProject[]) {
+      state.projects = projects;
+    },
     [NOTIFY](state, notification: INotifications) {
       notification.id = new Date().getTime();
       state.notifications.push(notification);
@@ -44,6 +50,13 @@ export const store = createStore<State>({
           (n) => n.id !== notification.id
         );
       }, 2000);
+    },
+  },
+  actions: {
+    [GET_PROJECTS]({ commit }) {
+      http
+        .get('projects')
+        .then((response) => commit(SET_PROJECTS, response.data));
     },
   },
 });
