@@ -2,7 +2,12 @@ import { INotifications } from '@/interfaces/INotifications';
 import IProject from '@/interfaces/IProject';
 import { InjectionKey } from 'vue';
 import { createStore, Store, useStore } from 'vuex';
-import { GET_PROJECTS } from './actions-type';
+import {
+  CHANGE_PROJECT,
+  DELETE_PROJECT,
+  GET_PROJECTS,
+  REGISTER_PROJECT,
+} from './actions-type';
 import {
   ADD_PROJECT,
   EXCLUDE_PROJECT,
@@ -57,6 +62,17 @@ export const store = createStore<State>({
       http
         .get('projects')
         .then((response) => commit(SET_PROJECTS, response.data));
+    },
+    [REGISTER_PROJECT](context, projectName: string) {
+      return http.post('/projects', { name: projectName });
+    },
+    [CHANGE_PROJECT](context, project: IProject) {
+      return http.put(`/projects/${project.id}`, project);
+    },
+    [DELETE_PROJECT]({ commit }, projectId: string) {
+      return http.delete(`/projects/${projectId}`).then(() => {
+        commit(EXCLUDE_PROJECT, projectId);
+      });
     },
   },
 });

@@ -38,15 +38,14 @@
 
 <script lang="ts">
 import { useStoreProject } from '@/store';
-import { GET_PROJECTS } from '@/store/actions-type';
-import { EXCLUDE_PROJECT } from '@/store/mutations-type';
+import { DELETE_PROJECT, GET_PROJECTS } from '@/store/actions-type';
 import { defineComponent, computed } from 'vue';
 
 export default defineComponent({
   name: 'ListProjectsView',
   methods: {
     exclude(id: string) {
-      this.store.commit(EXCLUDE_PROJECT, id);
+      this.store.dispatch(DELETE_PROJECT, id);
     },
   },
   setup() {

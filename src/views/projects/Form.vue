@@ -3,13 +3,7 @@
     <form @submit.prevent="save">
       <div class="field">
         <label class="label" for="projectName">Project name</label>
-        <input
-          class="input"
-          type="text"
-          placeholder="Project name"
-          id="projectName"
-          v-model="projectName"
-        />
+        <input class="input" type="text" placeholder="Project name" id="projectName" v-model="projectName" />
       </div>
       <div class="field" type="submit">
         <button class="button">Save</button>
@@ -19,11 +13,11 @@
 </template>
 
 <script lang="ts">
+import useNotifier from '@/hooks/notifier';
 import { NotificationType } from '@/interfaces/INotifications';
 import { useStoreProject } from '@/store';
-import { ADD_PROJECT, UPDATE_PROJECT } from '@/store/mutations-type';
+import { CHANGE_PROJECT, REGISTER_PROJECT } from '@/store/actions-type';
 import { defineComponent } from 'vue';
-import useNotifier from '@/hooks/notifier';
 
 export default defineComponent({
   name: 'FormProjectsView',
@@ -49,22 +43,25 @@ export default defineComponent({
   methods: {
     save(): void {
       if (this.id) {
-        this.store.commit(UPDATE_PROJECT, {
+        this.store.dispatch(CHANGE_PROJECT, {
           id: this.id,
           name: this.projectName,
-        });
-        this.$router.push('/projects');
+        }).then(() => this.success());
       } else {
-        this.store.commit(ADD_PROJECT, this.projectName);
-        this.projectName = '';
-        this.notify(
-          NotificationType.SUCCESS,
-          'Project created',
-          'The project was created successfully'
-        );
-        this.$router.push('/projects');
+        this.store.dispatch(REGISTER_PROJECT, this.projectName).then(() =>
+          this.success()
+        )
       }
     },
+    success(): void {
+      this.projectName = '';
+      this.notify(
+        NotificationType.SUCCESS,
+        'Project created',
+        'The project was created successfully'
+      );
+      this.$router.push('/projects');
+    }
   },
   setup() {
     const store = useStoreProject();
