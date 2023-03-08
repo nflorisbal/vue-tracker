@@ -7,20 +7,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import ITask from '@/interfaces/ITask';
+import { useStoreProject } from '@/store';
+import { GET_TASKS, REGISTER_TASK, GET_PROJECTS } from '@/store/actions-type';
+import { computed, defineComponent } from 'vue';
+import TaskBox from '../components/TaskBox.vue';
 import TaskForm from '../components/TaskForm.vue';
 import TaskItem from '../components/TaskItem.vue';
-import TaskBox from '../components/TaskBox.vue';
-import ITask from '../interfaces/ITask';
 
 export default defineComponent({
   name: 'TasksView',
   components: { TaskForm, TaskItem, TaskBox },
-  data() {
-    return {
-      tasks: [] as ITask[],
-    };
-  },
   computed: {
     emptyTasks(): boolean {
       return this.tasks.length === 0;
@@ -28,8 +25,17 @@ export default defineComponent({
   },
   methods: {
     addTask(task: ITask): void {
-      this.tasks.push(task);
+      this.store.dispatch(REGISTER_TASK, task);
     },
+  },
+  setup() {
+    const store = useStoreProject();
+    store.dispatch(GET_TASKS);
+    store.dispatch(GET_PROJECTS);
+    return {
+      tasks: computed(() => store.state.tasks),
+      store,
+    };
   },
 });
 </script>

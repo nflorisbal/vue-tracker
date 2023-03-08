@@ -1,24 +1,30 @@
+import http from '@/http';
 import { INotifications } from '@/interfaces/INotifications';
 import IProject from '@/interfaces/IProject';
+import ITask from '@/interfaces/ITask';
 import { InjectionKey } from 'vue';
 import { createStore, Store, useStore } from 'vuex';
 import {
   CHANGE_PROJECT,
   DELETE_PROJECT,
   GET_PROJECTS,
+  GET_TASKS,
   REGISTER_PROJECT,
+  REGISTER_TASK,
 } from './actions-type';
 import {
   ADD_PROJECT,
+  ADD_TASK,
   EXCLUDE_PROJECT,
   NOTIFY,
   SET_PROJECTS,
+  SET_TASKS,
   UPDATE_PROJECT,
 } from './mutations-type';
-import http from '@/http';
 
 interface State {
   projects: IProject[];
+  tasks: ITask[];
   notifications: INotifications[];
 }
 
@@ -27,6 +33,7 @@ export const key: InjectionKey<Store<State>> = Symbol();
 export const store = createStore<State>({
   state: {
     projects: [],
+    tasks: [],
     notifications: [],
   },
   mutations: {
@@ -37,6 +44,9 @@ export const store = createStore<State>({
       } as IProject;
       state.projects.push(project);
     },
+    [ADD_TASK](state, task: ITask) {
+      state.tasks.push(task);
+    },
     [UPDATE_PROJECT](state, project: IProject) {
       const projectIndex = state.projects.findIndex((p) => p.id === project.id);
       state.projects[projectIndex] = project;
@@ -46,6 +56,9 @@ export const store = createStore<State>({
     },
     [SET_PROJECTS](state, projects: IProject[]) {
       state.projects = projects;
+    },
+    [SET_TASKS](state, tasks: ITask[]) {
+      state.tasks = tasks;
     },
     [NOTIFY](state, notification: INotifications) {
       notification.id = new Date().getTime();
@@ -73,6 +86,14 @@ export const store = createStore<State>({
       return http.delete(`/projects/${projectId}`).then(() => {
         commit(EXCLUDE_PROJECT, projectId);
       });
+    },
+    [GET_TASKS]({ commit }) {
+      http.get('tasks').then((response) => commit(SET_TASKS, response.data));
+    },
+    [REGISTER_TASK]({ commit }, task: ITask) {
+      return http
+        .post('/tasks', task)
+        .then((response) => commit(ADD_TASK, response.data));
     },
   },
 });
